@@ -15,7 +15,7 @@ const Trip = db.define('trip', {
     allowNull: false
   },
   dates: {
-    type: Sequelize.ARRAY,
+    type: Sequelize.ARRAY(Sequelize.DATEONLY)
   },
   responseDate: {
       type: Sequelize.DATEONLY,

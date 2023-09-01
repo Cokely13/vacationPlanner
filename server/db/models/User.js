@@ -14,7 +14,10 @@ const User = db.define('user', {
   },
   password: {
     type: Sequelize.STRING,
-  }
+  },
+  dates: {
+    type: Sequelize.ARRAY(Sequelize.DATEONLY)
+  },
 })
 
 module.exports = User

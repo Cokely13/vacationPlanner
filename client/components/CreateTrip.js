@@ -4,7 +4,9 @@ function CreateTrip() {
   return (
     <div>
     <div>CreateTrip</div>
+    <div>Name:</div>
     <div>Location:</div>
+    <div>Length:</div>
     <div>Dates Available:</div>
     <div>Kids:</div>
     <div>Respond By:</div>
