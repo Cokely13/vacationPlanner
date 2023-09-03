@@ -1,20 +1,4 @@
-// import React from 'react'
 
-// function CreateTrip() {
-//   return (
-//     <div>
-//     <div>CreateTrip</div>
-//     <div>Name:</div>
-//     <div>Location:</div>
-//     <div>Length:</div>
-//     <div>Dates Available:</div>
-//     <div>Kids:</div>
-//     <div>Respond By:</div>
-//     </div>
-//   )
-// }
-
-// export default CreateTrip
 
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -32,8 +16,10 @@ export default function CreateTrip() {
   const [name, setName] = useState();
   const [reload, setReload] = useState(1);
   const [createdBy, setCreatedBy] = useState();
-  const [channel, setChannel] = useState();
-  const [image, setImage] = useState();
+  const [location, setLocation] = useState();
+  const [length, setLength] = useState();
+  const [dates, setDates] = useState();
+  const [response, setResponse] = useState();
   const {id} = useSelector((state) => state.auth )
   // const { userId } = useParams();
   // useEffect(() => {
@@ -53,23 +39,34 @@ export default function CreateTrip() {
 
   const handleChange2 = (event) => {
     event.preventDefault()
-    setChannel(event.target.value)
+    setLocation(event.target.value)
     // console.log("HA", like)
   }
 
   const handleChange3 = (event) => {
     event.preventDefault()
-    setImage(event.target.value)
+    setLength(event.target.value)
     // console.log("HA", like)
+  }
+
+  const handleChange4 = (event) => {
+    event.preventDefault()
+    setDates(event.target.value)
+  }
+
+  const handleChange5 = (event) => {
+    event.preventDefault()
+    setResponse(event.target.value)
   }
 
   const handleClick = (e) => {
     e.preventDefault()
     const newTrip = {
       name: name,
-      channel: channel,
-      createdBy: createdBy,
-      image: image
+      location: location,
+      length: length,
+      dates: dates,
+      responseDate: response
     }
 
     dispatch(createTrip(newTrip))
@@ -82,26 +79,27 @@ export default function CreateTrip() {
     <form>
       <div >
         <div>
-        <label> <h2 htmlFor="showname" style={{marginRight: "10px"}}>Show Name: </h2></label>
+        <label> <h2 htmlFor="name" style={{marginRight: "10px"}}>Trip Name: </h2></label>
           <input name='name' onChange={handleChange}  type="text" placeholder="Name"/>
         </div>
         {name?
         <div >
-          <label> <h2 htmlFor="channel" style={{marginRight: "10px"}}>Channel: </h2></label>
-          <div>
-          <select  onChange={handleChange2} name="channel" className="form-control">
-        <option disabled selected value="Channel">Select Channel</option>
-          <option value="HBO">HBO</option>
-          <option value="NETFLIX">NETFLIX</option>
-          <option value="DISNEY">DISNEY</option>
-          <option value="AMAZON">AMAZON</option>
-          <option value="OTHER">OTHER</option>
-          </select>
-        </div> </div> : <div></div>}
-        {channel?
+          <label> <h2 htmlFor="location" style={{marginRight: "10px"}}>Location: </h2></label>
+          <input name='location' onChange={handleChange2}  type="text" placeholder="Location"/> </div> : <div></div>}
+        {location?
         <div>
-        <label> <h2 htmlFor="image" style={{marginRight: "10px"}}>Image: </h2></label>
-          <input name='image' onChange={handleChange3}  type="text" placeholder="Copy Image Address"/>
+        <label> <h2 htmlFor="length" style={{marginRight: "10px"}}>Length of Trip: </h2></label>
+          <input name='length' onChange={handleChange3}  type="text" placeholder="Days"/>
+        </div>: <div></div>}
+        {length?
+        <div>
+        <label> <h2 htmlFor="dates" style={{marginRight: "10px"}}>Dates: </h2></label>
+          <input name='dates' onChange={handleChange4}  type="text" placeholder="Dates"/>
+        </div>: <div></div>}
+        {dates?
+        <div>
+        <label> <h2 htmlFor="response" style={{marginRight: "10px"}}>Response By: </h2></label>
+          <input name='response' onChange={handleChange5}  type="text" placeholder="Date"/>
         </div>: <div></div>}
       </div>
     </form>
