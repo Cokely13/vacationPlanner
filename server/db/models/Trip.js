@@ -19,7 +19,11 @@ const Trip = db.define('trip', {
   },
   responseDate: {
       type: Sequelize.DATEONLY,
-  }
+  },
+  createdBy: {
+    type:Sequelize.INTEGER,
+    defaultValue: "0"
+  },
 
 })
 

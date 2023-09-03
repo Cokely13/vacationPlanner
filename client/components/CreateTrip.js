@@ -66,11 +66,15 @@ export default function CreateTrip() {
       location: location,
       length: length,
       dates: dates,
-      responseDate: response
+      responseDate: response,
+      createdBy: createdBy,
     }
 
     dispatch(createTrip(newTrip))
     setName("")
+    setLength("")
+    setDates("")
+    setResponse("")
   }
 
 
@@ -104,7 +108,7 @@ export default function CreateTrip() {
       </div>
     </form>
     <div className="text-center">
-    <button className="btn btn-primary text-center"  onClick={handleClick}>Add Show</button>
+    <button className="btn btn-primary text-center"  onClick={handleClick}>Add Trip</button>
     </div>
   </div>
   )

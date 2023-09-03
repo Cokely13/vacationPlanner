@@ -9,6 +9,7 @@ import TripList from './components/TripList'
 import CreateTrip from './components/CreateTrip'
 import {me} from './store'
 import Budget from './components/Budget';
+import EditTrip from './components/EditTrip';
 
 /**
  * COMPONENT
@@ -29,6 +30,7 @@ class Routes extends Component {
             <Route exact path="/create" component={CreateTrip} />
             <Route exact path="/tripdetails" component={TripDetails} />
             <Route exact path="/list" component={TripList} />
+            <Route exact path="/edittrip" component={EditTrip} />
             <Route exact path="/travel" component={TravelInfo} />
             <Route exact path="/budget" component={Budget} />
             <Redirect to="/home" />
