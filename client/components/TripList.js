@@ -7,6 +7,8 @@ function TripList() {
   const dispatch = useDispatch()
   const trips = useSelector((state) => state.allTrips)
 
+  // console.log("trips", trips)
+
   useEffect(() => {
     dispatch(fetchTrips())
   }, [])
@@ -14,7 +16,7 @@ function TripList() {
   return (
     <div>
     <div>TripList</div>
-    {trips.length? trips.maps((trip) => {
+    {trips ? trips.map((trip) => {
       return (
       <div>
       <div>Name: {trip.name} </div>
