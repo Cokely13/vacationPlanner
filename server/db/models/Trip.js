@@ -14,6 +14,9 @@ const Trip = db.define('trip', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
+  confirms: {
+    type: Sequelize.ARRAY(Sequelize.INTEGER)
+  },
   dates: {
     type: Sequelize.ARRAY(Sequelize.DATEONLY)
   },

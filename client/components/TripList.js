@@ -14,6 +14,11 @@ function TripList() {
     dispatch(fetchTrips())
   }, [])
 
+  const handleClick = (e) => {
+    e.preventDefault()
+
+  }
+
   return (
     <div>
     <div>TripList</div>
@@ -24,9 +29,11 @@ function TripList() {
       <div>Name: {trip.name} </div>
       <div>Location: {trip.location} </div>
       <div>Length: {trip.length} </div>
+      <div>Confirms: {trip.confirms ? trip.confirms.length : 0} </div>
       <div>Response Date: {trip.responseDate} </div>
       <div>Created By: {trip.createdBy} </div>
       {trip.createdBy == id ? <div><Link to='/edittrip'>Edit Trip</Link></div> : <div></div>}
+      {trip.confirms == id ? <div><Link to='/edittrip'>Edit Trip</Link></div> : <div> <button className="btn btn-primary text-center"  onClick={handleClick}>Confirm Attendance</button></div>}
       <p></p>
       </div>
     )}) :  <div>Non</div>}
