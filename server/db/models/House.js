@@ -11,13 +11,13 @@ const House = db.define('house', {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
-parking: {
-  type: Sequelize.BOOLEAN,
-  defaultValue: false
+price: {
+  type: Sequelize.FLOAT,
+    allowNull: false,
 },
-pool: {
-  type: Sequelize.BOOLEAN,
-  defaultValue: false
+createdBy: {
+  type:Sequelize.INTEGER,
+  defaultValue: "0"
 },
 
 })

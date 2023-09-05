@@ -6,13 +6,12 @@ import { useEffect, useState } from 'react'
 // import { Link, useParams, } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 import {createTrip} from '../store/allTripsStore'
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
 // // import { fetchUsers } from '../store/allUsersStore'
 // import { fetchSingleUser } from '../store/singleUserStore'
 
 export default function CreateTrip() {
   const dispatch = useDispatch()
-  // const navigate = useNavigate();
-  // console.log("NAV", useNavigate())
   const [name, setName] = useState();
   const [reload, setReload] = useState(1);
   const [createdBy, setCreatedBy] = useState();
@@ -22,7 +21,6 @@ export default function CreateTrip() {
   const [dates, setDates] = useState();
   const [response, setResponse] = useState();
   const {id} = useSelector((state) => state.auth )
-  // const { userId } = useParams();
   // useEffect(() => {
   //   dispatch(fetchSingleUser(userId))
 
@@ -35,6 +33,7 @@ export default function CreateTrip() {
     event.preventDefault()
     setName(event.target.value)
     setCreatedBy(id)
+
   }
 
   const handleChange2 = (event) => {
