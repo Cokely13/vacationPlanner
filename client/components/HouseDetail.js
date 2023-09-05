@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 import { createHouse } from '../store/allHousesStore'
+import { fetchHouses } from '../store/allHousesStore'
+import { fetchTrip } from '../store/singleTripStore'
 // // import { fetchUsers } from '../store/allUsersStore'
 // import { fetchSingleUser } from '../store/singleUserStore'
 
@@ -19,14 +21,14 @@ export default function HouseDetail() {
   const [price, setPrice] = useState();
   const [pool, setLimit] = useState();
   const {id} = useSelector((state) => state.auth )
+  const trip = useSelector((state) => state.singleTrip);
   const { tripId } = useParams();
-  // useEffect(() => {
-  //   dispatch(fetchSingleUser(userId))
 
-  //   // Safe to add dispatch to the dependencies array
-  // }, [])
 
-  // const user = useSelector((state) => state.singleUser)
+
+  useEffect(() => {
+    dispatch(fetchTrip(tripId));
+  }, []);
 
   const handleChange = (event) => {
     event.preventDefault()
@@ -62,9 +64,14 @@ export default function HouseDetail() {
     setRooms("")
   }
 
+  const house = trip.house
+
+  console.log("trips", house )
 
   return (
     <div >
+      {trip.createdBy == id ? (<div>
+
     <form>
       <div >
         <div>
@@ -86,5 +93,13 @@ export default function HouseDetail() {
     <button className="btn btn-primary text-center"  onClick={handleClick}>Add House</button>
     </div>
   </div>
-  )
-}
+  ) : <div></div>}
+  {house ?
+  <div>
+  <div>Name: {house.name}</div>
+  <div>Rooms: {house.price}</div>
+  <div>Price: {house.rooms}</div>
+
+  </div> : <div></div>}
+  </div>
+)}
