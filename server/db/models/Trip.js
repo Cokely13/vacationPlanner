@@ -25,6 +25,7 @@ const Trip = db.define('trip', {
   },
   limit: {
     type: Sequelize.INTEGER,
+    defaultValue: "0"
   },
   createdBy: {
     type:Sequelize.INTEGER,

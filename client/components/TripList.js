@@ -84,7 +84,7 @@ function TripList() {
           <div>Confirms: {trip.confirms ? trip.confirms.length : 0}</div>
           <div>Names: {getNamesFromIds(trip.confirms).join(', ')}</div>
           <div>Response Date: {trip.responseDate}</div>
-          <div>Limit: {trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit}</div>
+          <div>Limit: {trip.confirms ?trip.limit == "0" ? "No Limit" : trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit : <div>{trip.limit == "0" ? "No Limit" : <div>{trip.limit}</div> }</div>}</div>
           <div>Created By: {trip.createdBy}</div>
           {trip.createdBy == id ? (
             <div><Link to='/edittrip'>Edit Trip</Link></div>
