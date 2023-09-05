@@ -19,6 +19,7 @@ export default function HouseDetail() {
   const [createdBy, setCreatedBy] = useState();
   const [rooms, setRooms] = useState();
   const [price, setPrice] = useState();
+  const [addHouse, setAddHouse] = useState()
   const [pool, setLimit] = useState();
   const {id} = useSelector((state) => state.auth )
   const trip = useSelector((state) => state.singleTrip);
@@ -47,6 +48,10 @@ export default function HouseDetail() {
     setRooms(event.target.value)
   }
 
+  const handleAdd = (e) => {
+    e.preventDefault()
+    setAddHouse(true)
+  }
 
   const handleClick = (e) => {
     e.preventDefault()
@@ -70,7 +75,8 @@ export default function HouseDetail() {
 
   return (
     <div >
-      {trip.createdBy == id ? (<div>
+      {trip.createdBy == id && !addHouse ? <div><button className="btn btn-primary text-center"  onClick={handleAdd}>New House</button></div> : <div></div>}
+      {addHouse ? (<div>
 
     <form>
       <div >
