@@ -18,6 +18,7 @@ export default function CreateTrip() {
   const [createdBy, setCreatedBy] = useState();
   const [location, setLocation] = useState();
   const [length, setLength] = useState();
+  const [limit, setLimit] = useState();
   const [dates, setDates] = useState();
   const [response, setResponse] = useState();
   const {id} = useSelector((state) => state.auth )
@@ -34,19 +35,22 @@ export default function CreateTrip() {
     event.preventDefault()
     setName(event.target.value)
     setCreatedBy(id)
-    // console.log("HA", like)
   }
 
   const handleChange2 = (event) => {
     event.preventDefault()
     setLocation(event.target.value)
-    // console.log("HA", like)
+
   }
 
   const handleChange3 = (event) => {
     event.preventDefault()
     setLength(event.target.value)
-    // console.log("HA", like)
+  }
+
+  const handleChange6 = (event) => {
+    event.preventDefault()
+    setLimit(event.target.value)
   }
 
   const handleChange4 = (event) => {
@@ -65,6 +69,7 @@ export default function CreateTrip() {
       name: name,
       location: location,
       length: length,
+      limit: limit,
       dates: dates,
       responseDate: response,
       createdBy: createdBy,
@@ -75,6 +80,7 @@ export default function CreateTrip() {
     setLength("")
     setDates("")
     setResponse("")
+    setLimit("")
   }
 
 
@@ -96,6 +102,11 @@ export default function CreateTrip() {
           <input name='length' onChange={handleChange3}  type="text" placeholder="Days"/>
         </div>: <div></div>}
         {length?
+        <div>
+        <label> <h2 htmlFor="limit" style={{marginRight: "10px"}}>Limit: </h2></label>
+          <input name='limit' onChange={handleChange6}  type="text" placeholder="Limit"/>
+        </div>: <div></div>}
+        {limit?
         <div>
         <label> <h2 htmlFor="dates" style={{marginRight: "10px"}}>Dates: </h2></label>
           <input name='dates' onChange={handleChange4}  type="text" placeholder="Dates"/>

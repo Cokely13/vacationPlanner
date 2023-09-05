@@ -23,6 +23,9 @@ const Trip = db.define('trip', {
   responseDate: {
       type: Sequelize.DATEONLY,
   },
+  limit: {
+    type: Sequelize.INTEGER,
+  },
   createdBy: {
     type:Sequelize.INTEGER,
     defaultValue: "0"
