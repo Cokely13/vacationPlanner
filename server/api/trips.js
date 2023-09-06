@@ -1,9 +1,9 @@
 const router = require('express').Router()
-const { models: { Trip, House}} = require('../db')
+const { models: { Trip, House, Travel}} = require('../db')
 
 router.get('/', async (req, res, next) => {
   try {
-    const trips = await Trip.findAll({include: House})
+    const trips = await Trip.findAll({include: [House, Travel]})
     res.json(trips)
   } catch (err) {
     next(err)
@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const trip = await Trip.findByPk(req.params.id, {include: House});
+    const trip = await Trip.findByPk(req.params.id, {include: [House, Travel]});
     res.json(trip);
   } catch (err) {
     next(err);

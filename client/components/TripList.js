@@ -89,13 +89,15 @@ function TripList() {
           ) : (
             <button className="btn btn-primary text-center" onClick={() => handleClick(trip.id, trip.confirms, 'confirm')}>Confirm Attendance</button>
           )}
+          <p></p>
           {trip.confirms && trip.confirms.includes(id) ? <div><Link to={`/house/${trip.id}`}>View House</Link></div> : <div></div>}
+          <p></p>
+          {trip.confirms && trip.confirms.includes(id) ? <div><Link to={`/travel/${trip.id}`}>View Travel</Link></div> : <div></div>}
           <p></p>
         </div>
       )) : (
         <div>None</div>
       )}
-      <div>Location: / Date:</div>
     </div>
   );
 }
