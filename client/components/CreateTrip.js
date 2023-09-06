@@ -19,15 +19,13 @@ export default function CreateTrip() {
   const [length, setLength] = useState();
   const [limit, setLimit] = useState();
   const [dates, setDates] = useState();
-  const [response, setResponse] = useState();
+  const [response, setResponse] = useState(new Date('June 11, 2023 09:00:00').getTime());
+  const [showDateSelection, setShowDateSelection] = useState(false);
+  const [start, setStart] = useState(new Date('June 11, 2023 09:00:00').getTime());
+  const [end, setEnd] = useState(new Date('June 11, 2023 09:00:00').getTime());
+
   const {id} = useSelector((state) => state.auth )
-  // useEffect(() => {
-  //   dispatch(fetchSingleUser(userId))
 
-  //   // Safe to add dispatch to the dependencies array
-  // }, [])
-
-  // const user = useSelector((state) => state.singleUser)
 
   const handleChange = (event) => {
     event.preventDefault()
@@ -54,12 +52,20 @@ export default function CreateTrip() {
 
   const handleChange4 = (event) => {
     event.preventDefault()
-    setDates(event.target.value)
+    const selectedDate = new Date(event.target.value).getTime();
+    setStart(selectedDate)
   }
 
   const handleChange5 = (event) => {
     event.preventDefault()
-    setResponse(event.target.value)
+    const selectedDate = new Date(event.target.value).getTime();
+    setEnd(selectedDate)
+  }
+
+  const handleChange7 = (event) => {
+    event.preventDefault()
+    const selectedDate = new Date(event.target.value).getTime();
+    setResponse(selectedDate )
   }
 
   const handleClick = (e) => {
@@ -69,7 +75,8 @@ export default function CreateTrip() {
       location: location,
       length: length,
       limit: limit,
-      dates: dates,
+      startDate: start,
+      endDate: end,
       responseDate: response,
       createdBy: createdBy,
     }
@@ -82,6 +89,9 @@ export default function CreateTrip() {
     setLimit("")
   }
 
+  const handleToggleDateSelection = () => {
+    setShowDateSelection(!showDateSelection);
+  };
 
   return (
     <div >
@@ -106,15 +116,65 @@ export default function CreateTrip() {
           <input name='limit' onChange={handleChange6}  type="text" placeholder="Limit"/>
         </div>: <div></div>}
         {limit?
+              <div>
+              <label>
+                <h2 htmlFor="start" style={{marginRight: "10px"}}>Start Date: </h2>
+              </label>
+
+              (
+             <>
+               <input
+                 type="date"
+                 id="dateInput"
+                 value={new Date(start).toISOString().split('T')[0]}
+                 onChange={handleChange4}
+               />
+               <button className="btn btn-primary" style={{marginLeft: "10px"}} onClick={handleToggleDateSelection}>
+                 Cancel
+               </button>
+             </>
+           )
+            </div>: <div></div>}
+            {limit?
+              <div>
+              <label>
+                <h2 htmlFor="end" style={{marginRight: "10px"}}>End Date: </h2>
+              </label>
+
+              (
+             <>
+               <input
+                 type="date"
+                 id="dateInput"
+                 value={new Date(end).toISOString().split('T')[0]}
+                 onChange={handleChange5}
+               />
+               <button className="btn btn-primary" style={{marginLeft: "10px"}} onClick={handleToggleDateSelection}>
+                 Cancel
+               </button>
+             </>
+           )
+            </div>: <div></div>}
+        {limit?
         <div>
-        <label> <h2 htmlFor="dates" style={{marginRight: "10px"}}>Dates: </h2></label>
-          <input name='dates' onChange={handleChange4}  type="text" placeholder="Dates"/>
-        </div>: <div></div>}
-        {dates?
-        <div>
-        <label> <h2 htmlFor="response" style={{marginRight: "10px"}}>Response By: </h2></label>
-          <input name='response' onChange={handleChange5}  type="text" placeholder="Date"/>
-        </div>: <div></div>}
+        <label>
+          <h2 htmlFor="response" style={{marginRight: "10px"}}>Respond By: </h2>
+        </label>
+
+        (
+       <>
+         <input
+           type="date"
+           id="dateInput"
+           value={new Date(response).toISOString().split('T')[0]}
+           onChange={handleChange7}
+         />
+         <button className="btn btn-primary" style={{marginLeft: "10px"}} onClick={handleToggleDateSelection}>
+           Cancel
+         </button>
+       </>
+     )
+      </div>: <div></div>}
       </div>
     </form>
     <div className="text-center">

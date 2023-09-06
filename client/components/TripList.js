@@ -13,7 +13,7 @@ function TripList() {
   const { id } = useSelector((state) => state.auth);
 
 
-  console.log("users", users)
+  console.log("users", tripsFromStore)
 
   // Use local state
   const [localTrips, setLocalTrips] = useState([]);
@@ -76,6 +76,8 @@ function TripList() {
           <div>Length: {trip.length}</div>
           <div>Confirms: {trip.confirms ? trip.confirms.length : 0}</div>
           <div>Names: {getNamesFromIds(trip.confirms).join(', ')}</div>
+          <div>Start Date: {trip.startDate}</div>
+          <div>End Date: {trip.endDate}</div>
           <div>Response Date: {trip.responseDate}</div>
           <div>Limit: {trip.confirms ?trip.limit == "0" ? "No Limit" : trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit : <div>{trip.limit == "0" ? "No Limit" : <div>{trip.limit}</div> }</div>}</div>
           <div>Created By: {trip.createdBy}</div>
