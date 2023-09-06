@@ -59,13 +59,6 @@ function TripList() {
     dispatch(updateSingleTrip(newTrip));
   };
 
-  // const getNamesFromIds = (ids) => {
-  //   if (!ids || ids.length === 0 || !users) return [];
-  //   return ids.map(id => {
-  //     const user = users.find(u => u.id === id);
-  //     return user ? user.name : null;
-  //   }).filter(name => name); // filter out any null values
-  // };
 
   const getNamesFromIds = (ids) => {
     if (!ids || ids.length === 0) return [];

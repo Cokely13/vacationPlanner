@@ -3,19 +3,13 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { Link, useParams, } from 'react-router-dom'
-import { useNavigate } from "react-router-dom"
 import { createHouse } from '../store/allHousesStore'
-import { fetchHouses } from '../store/allHousesStore'
 import {fetchUsers} from '../store/allUsersStore'
 import {updateSingleHouse} from '../store/singleHouseStore'
 import { fetchTrip } from '../store/singleTripStore'
-// // import { fetchUsers } from '../store/allUsersStore'
-// import { fetchSingleUser } from '../store/singleUserStore'
 
 export default function HouseDetail() {
   const dispatch = useDispatch()
-  // const navigate = useNavigate();
-  // console.log("NAV", useNavigate())
   const users = useSelector((state) => state.allUsers);
   const [name, setName] = useState();
   const [reload, setReload] = useState(1);
@@ -23,14 +17,13 @@ export default function HouseDetail() {
   const [rooms, setRooms] = useState();
   const [price, setPrice] = useState();
   const [addHouse, setAddHouse] = useState()
-  const [pool, setLimit] = useState();
   const {id} = useSelector((state) => state.auth )
   const trip = useSelector((state) => state.singleTrip);
   const [localHouses, setLocalHouses] = useState([]);
   const { tripId } = useParams();
 
 
-  console.log('trip', trip)
+
   const houses = trip.houses
 
   useEffect(() => {
@@ -40,7 +33,28 @@ export default function HouseDetail() {
 
   useEffect(() => {
     dispatch(fetchTrip(tripId));
-  }, []);
+  }, [reload]);
+
+  useEffect(() => {
+    if (trip && trip.houses) {
+        setLocalHouses(trip.houses);
+    }
+}, [trip]);
+
+
+
+  const findConfirmedHouseIdForUser = () => {
+    const confirmedHouse = houses.find(h => h.confirms && h.confirms.includes(id));
+    return confirmedHouse ? confirmedHouse.id : null;
+};
+
+const sortedHouses = houses && houses.length
+? houses.sort((a, b) => {
+    const aIsConfirmed = a.confirms && a.confirms.includes(id);
+    const bIsConfirmed = b.confirms && b.confirms.includes(id);
+    return bIsConfirmed - aIsConfirmed; // will place confirmed house at the top
+  })
+: [];
 
   const handleChange = (event) => {
     event.preventDefault()
@@ -74,7 +88,6 @@ export default function HouseDetail() {
       tripId: tripId
     }
 
-    console.log("new house", house)
 
     dispatch(createHouse(newHouse))
     setName("")
@@ -82,34 +95,48 @@ export default function HouseDetail() {
     setRooms("")
   }
 
+
   const handleClick2 = (houseId, confirms, action) => {
-    let updatedConfirms = [];
+    let updatedConfirms = [...(confirms || [])];
 
     if (action === 'confirm') {
-      updatedConfirms = confirms
-        ? (confirms.includes(id) ? confirms : [...confirms, id])
-        : [id];
+        if (!updatedConfirms.includes(id)) {
+            updatedConfirms.push(id);
+        }
     } else if (action === 'decline') {
-      updatedConfirms = confirms.filter(userId => userId !== id);
+        updatedConfirms = updatedConfirms.filter(userId => userId !== id);
+    } else if (action === 'switch') {
+        const otherHouseId = findConfirmedHouseIdForUser();
+        if (otherHouseId) {
+            const otherHouse = localHouses.find(h => h.id === otherHouseId);
+            if (otherHouse && otherHouse.confirms) {
+                otherHouse.confirms = otherHouse.confirms.filter(userId => userId !== id);
+                dispatch(updateSingleHouse(otherHouse)); // Update the other house
+            }
+        }
+        if (!updatedConfirms.includes(id)) {
+            updatedConfirms.push(id);
+        }
     }
 
     const newHouse = {
-      id: houseId,
-      confirms: updatedConfirms
+        id: houseId,
+        confirms: updatedConfirms
     };
 
-    // Update the local state
     const updatedHouses = localHouses.map(house => {
       if (house.id === houseId) {
-        return { ...house, confirms: updatedConfirms };
+          return { ...house, confirms: updatedConfirms };
       }
       return house;
-    });
-    setLocalHouses(updatedHouses);
+  });
+  setLocalHouses(updatedHouses);
 
-    // Dispatch to update the store (and eventually the database)
+
     dispatch(updateSingleHouse(newHouse));
-  };
+
+    setReload(prevReload => prevReload + 1);
+};
 
   const getNamesFromIds = (ids) => {
     if (!ids || ids.length === 0) return [];
@@ -143,19 +170,24 @@ export default function HouseDetail() {
     </div>
   </div>
   ) : <div></div>}
-  {houses ? houses.map((house) => (
-  <div key={house.id}>
-  <div>Name: {house.name}</div>
-  <div>Price: {house.price}</div>
-  <div>Rooms: {house.rooms}</div>
-  <div>Confirms: {house.confirms ? house.confirms.length : 0}</div>
-  <div>Names: {getNamesFromIds(trip.confirms).join(', ')}</div>
-  {house.confirms && house.confirms.includes(id) ? (
-            <button className="btn btn-danger text-center" onClick={() => handleClick2(house.id, house.confirms, 'decline')}>Decline</button>
-          ) : (
-            <button className="btn btn-primary text-center" onClick={() => handleClick2(house.id, house.confirms, 'confirm')}>Confirm Attendance</button>
-          )}
+    {houses ? sortedHouses.map((house) => {
+                const confirmedHouseId = findConfirmedHouseIdForUser();
+                const isAlreadyConfirmed = house.confirms && house.confirms.includes(id);
 
-  </div>)) : <div></div>}
+                return (
+                    <div key={house.id} style={isAlreadyConfirmed ? {border: "3px solid black", padding: "5px", marginBottom: "10px"} : {}}>
+                        <div>Name: {house.name}</div>
+                        <div>Price: {house.price}</div>
+                        <div>Rooms: {house.rooms}</div>
+                        <div>Confirms: {house.confirms ? house.confirms.length : 0}</div>
+                        <div>Names: {getNamesFromIds(house.confirms).join(', ')}</div>
+                        <button
+                            className={isAlreadyConfirmed ? "btn btn-danger text-center" : "btn btn-primary text-center"}
+                            onClick={() => handleClick2(house.id, house.confirms, isAlreadyConfirmed ? 'decline' : confirmedHouseId ? 'switch' : 'confirm')}>
+                            {isAlreadyConfirmed ? "Decline" : confirmedHouseId ? "Switch Confirm" : "Confirm Attendance"}
+                        </button>
+                    </div>
+                );
+            }) : <div></div>}
   </div>
 )}
