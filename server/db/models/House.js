@@ -19,6 +19,9 @@ createdBy: {
   type:Sequelize.INTEGER,
   defaultValue: "0"
 },
+confirms: {
+  type: Sequelize.ARRAY(Sequelize.INTEGER)
+},
 
 })
 

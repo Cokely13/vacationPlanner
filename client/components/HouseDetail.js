@@ -6,6 +6,8 @@ import { Link, useParams, } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 import { createHouse } from '../store/allHousesStore'
 import { fetchHouses } from '../store/allHousesStore'
+import {fetchUsers} from '../store/allUsersStore'
+import {updateSingleHouse} from '../store/singleHouseStore'
 import { fetchTrip } from '../store/singleTripStore'
 // // import { fetchUsers } from '../store/allUsersStore'
 // import { fetchSingleUser } from '../store/singleUserStore'
@@ -14,6 +16,7 @@ export default function HouseDetail() {
   const dispatch = useDispatch()
   // const navigate = useNavigate();
   // console.log("NAV", useNavigate())
+  const users = useSelector((state) => state.allUsers);
   const [name, setName] = useState();
   const [reload, setReload] = useState(1);
   const [createdBy, setCreatedBy] = useState();
@@ -23,8 +26,15 @@ export default function HouseDetail() {
   const [pool, setLimit] = useState();
   const {id} = useSelector((state) => state.auth )
   const trip = useSelector((state) => state.singleTrip);
+  const [localHouses, setLocalHouses] = useState([]);
   const { tripId } = useParams();
 
+
+  const house = trip.house
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, []);
 
 
   useEffect(() => {
@@ -69,9 +79,39 @@ export default function HouseDetail() {
     setRooms("")
   }
 
-  const house = trip.house
+  const handleClick2 = (houseId, confirms, action) => {
+    let updatedConfirms = [];
 
-  console.log("trips", house )
+    if (action === 'confirm') {
+      updatedConfirms = confirms
+        ? (confirms.includes(id) ? confirms : [...confirms, id])
+        : [id];
+    } else if (action === 'decline') {
+      updatedConfirms = confirms.filter(userId => userId !== id);
+    }
+
+    const newHouse = {
+      id: houseId,
+      confirms: updatedConfirms
+    };
+
+    // Update the local state
+    const updatedHouses = localHouses.map(house => {
+      if (house.id === houseId) {
+        return { ...house, confirms: updatedConfirms };
+      }
+      return house;
+    });
+    setLocalHouses(updatedHouses);
+
+    // Dispatch to update the store (and eventually the database)
+    dispatch(updateSingleHouse(newHouse));
+  };
+
+  const getNamesFromIds = (ids) => {
+    if (!ids || ids.length === 0) return [];
+    return users.filter( user => ids.includes(user.id)).map(user => user.username )
+};
 
   return (
     <div >
@@ -105,6 +145,13 @@ export default function HouseDetail() {
   <div>Name: {house.name}</div>
   <div>Rooms: {house.price}</div>
   <div>Price: {house.rooms}</div>
+  <div>Confirms: {house.confirms ? house.confirms.length : 0}</div>
+  <div>Names: {getNamesFromIds(trip.confirms).join(', ')}</div>
+  {house.confirms && house.confirms.includes(id) ? (
+            <button className="btn btn-danger text-center" onClick={() => handleClick2(house.id, house.confirms, 'decline')}>Decline</button>
+          ) : (
+            <button className="btn btn-primary text-center" onClick={() => handleClick2(house.id, house.confirms, 'confirm')}>Confirm Attendance</button>
+          )}
 
   </div> : <div></div>}
   </div>
