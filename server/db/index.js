@@ -26,7 +26,7 @@ Budget.belongsTo(Trip);
 Trip.hasOne(Budget);
 
 House.belongsTo(Trip);
-Trip.hasOne(House);
+Trip.hasMany(House);
 
 
 module.exports = {

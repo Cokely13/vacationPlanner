@@ -30,7 +30,8 @@ export default function HouseDetail() {
   const { tripId } = useParams();
 
 
-  const house = trip.house
+  console.log('trip', trip)
+  const houses = trip.houses
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -72,6 +73,8 @@ export default function HouseDetail() {
       createdBy: createdBy,
       tripId: tripId
     }
+
+    console.log("new house", house)
 
     dispatch(createHouse(newHouse))
     setName("")
@@ -140,11 +143,11 @@ export default function HouseDetail() {
     </div>
   </div>
   ) : <div></div>}
-  {house ?
-  <div>
+  {houses ? houses.map((house) => (
+  <div key={house.id}>
   <div>Name: {house.name}</div>
-  <div>Rooms: {house.price}</div>
-  <div>Price: {house.rooms}</div>
+  <div>Price: {house.price}</div>
+  <div>Rooms: {house.rooms}</div>
   <div>Confirms: {house.confirms ? house.confirms.length : 0}</div>
   <div>Names: {getNamesFromIds(trip.confirms).join(', ')}</div>
   {house.confirms && house.confirms.includes(id) ? (
@@ -153,6 +156,6 @@ export default function HouseDetail() {
             <button className="btn btn-primary text-center" onClick={() => handleClick2(house.id, house.confirms, 'confirm')}>Confirm Attendance</button>
           )}
 
-  </div> : <div></div>}
+  </div>)) : <div></div>}
   </div>
 )}
