@@ -156,6 +156,9 @@ const handleToggleDateSelection = () => {
 
   return (
     <div >
+      <h1>Destination: {trip.location}</h1>
+      <h1>Dates: {trip.startDate} to {trip.endDate} </h1>
+
       {trip.createdBy == id && !addTravel ? <div><button className="btn btn-primary text-center"  onClick={handleAdd}>New Travels</button></div> : <div></div>}
       {addTravel ? (<div>
 
