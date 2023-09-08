@@ -71,7 +71,7 @@ function TripList() {
       {localTrips ? localTrips.map((trip) => (
         <div key={trip.id}>
           <b><u>TRIP</u></b>
-          <div>Name: {trip.name}</div>
+          <div>Name: <Link to={`/tripdetails/${trip.id}`}>{trip.name}</Link></div>
           <div>Location: {trip.location}</div>
           <div>Length: {trip.length}</div>
           <div>Confirms: {trip.confirms ? trip.confirms.length : 0}</div>

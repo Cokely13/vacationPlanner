@@ -29,7 +29,7 @@ class Routes extends Component {
           <Switch>
             <Route exact path="/home" component={Home} />
             <Route exact path="/create" component={CreateTrip} />
-            <Route exact path="/tripdetails" component={TripDetails} />
+            <Route exact path="/tripdetails/:tripId" component={TripDetails} />
             <Route exact path="/list" component={TripList} />
             <Route exact path="/edittrip" component={EditTrip} />
             <Route exact path="/travel/:tripId" component={TravelInfo} />
