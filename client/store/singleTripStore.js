@@ -28,13 +28,12 @@ export const fetchTrip = (id) => {
   };
 };
 
-export const updateSingleTrip = (trip, history) => {
+export const updateSingleTrip = (trip) => {
   return async (dispatch) => {
     try {
         await axios.put(`/api/trips/${trip.id}`, trip);
         const { data: tripData } = await axios.get(`/api/trips/${trip.id}`);
         dispatch(_updateSingleTrip(tripData));
-        history.push(`/trips/${trip.id}`)
       }
      catch (error) {
       console.log("TRIP", trip)
