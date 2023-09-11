@@ -82,7 +82,7 @@ function TripList() {
           <div>Limit: {trip.confirms ?trip.limit == "0" ? "No Limit" : trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit : <div>{trip.limit == "0" ? "No Limit" : <div>{trip.limit}</div> }</div>}</div>
           <div>Created By: {trip.createdBy}</div>
           {trip.createdBy == id ? (
-            <div><Link to='/edittrip'>Edit Trip</Link></div>
+            <div><Link to={`/edittrip/${trip.id}`}>Edit Trip</Link></div>
           ) : (
             <div></div>
           )}

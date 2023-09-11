@@ -85,7 +85,7 @@ function NewTrip() {
           <div>Limit: {localTrips[0].confirms ?localTrips[0].limit == "0" ? "No Limit" : localTrips[0].limit == localTrips[0].confirms.length ? "Limit Reached" : localTrips[0].limit : <div>{localTrips[0].limit == "0" ? "No Limit" : <div>{localTrips[0].limit}</div> }</div>}</div>
           <div>Created By: {localTrips[0].createdBy}</div>
           {localTrips[0].createdBy == id ? (
-            <div><Link to='/edittrip'>Edit Trip</Link></div>
+            <div><Link to={`/edittrip/${localTrips[0].id}`}>Edit Trip</Link></div>
           ) : (
             <div></div>
           )}
