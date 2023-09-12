@@ -6,25 +6,43 @@ import { useEffect, useState } from 'react'
 // import { Link, useParams, } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 import {createTrip} from '../store/allTripsStore'
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
-// // import { fetchUsers } from '../store/allUsersStore'
-// import { fetchSingleUser } from '../store/singleUserStore'
+import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { fetchUsers } from '../store/allUsersStore'
 
 export default function CreateTrip() {
+  const currentDate = new Date().getTime()
+  const history = useHistory()
   const dispatch = useDispatch()
   const [name, setName] = useState();
   const [reload, setReload] = useState(1);
   const [createdBy, setCreatedBy] = useState();
   const [location, setLocation] = useState();
   const [length, setLength] = useState();
-  const [limit, setLimit] = useState();
+  const [invite, setInvite] = useState([]);
   const [dates, setDates] = useState();
-  const [response, setResponse] = useState(new Date('June 11, 2023 09:00:00').getTime());
+  const [response, setResponse] = useState(currentDate);
   const [showDateSelection, setShowDateSelection] = useState(false);
-  const [start, setStart] = useState(new Date('June 11, 2023 09:00:00').getTime());
-  const [end, setEnd] = useState(new Date('June 11, 2023 09:00:00').getTime());
+  const [start, setStart] = useState((currentDate));
+  const [end, setEnd] = useState(currentDate);
 
   const {id} = useSelector((state) => state.auth )
+  const users = useSelector((state) => state.allUsers);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, []);
+
+  const toggleInvite = (userId) => {
+    if (invite.includes(userId)) {
+      setInvite(invite.filter(id => id !== userId));
+    } else {
+      setInvite([...invite, userId]);
+    }
+  }
+
+  const isSelected = (userId) => {
+    return invite.includes(userId);
+  }
 
 
   const handleChange = (event) => {
@@ -45,27 +63,27 @@ export default function CreateTrip() {
     setLength(event.target.value)
   }
 
-  const handleChange6 = (event) => {
-    event.preventDefault()
-    setLimit(event.target.value)
-  }
+  // const handleChange6 = (event) => {
+  //   event.preventDefault()
+  //   setLimit(event.target.value)
+  // }
 
   const handleChange4 = (event) => {
     event.preventDefault()
     const selectedDate = new Date(event.target.value).getTime();
-    setStart(selectedDate)
+    setStart(event.target.value)
   }
 
   const handleChange5 = (event) => {
     event.preventDefault()
     const selectedDate = new Date(event.target.value).getTime();
-    setEnd(selectedDate)
+    setEnd(event.target.value)
   }
 
   const handleChange7 = (event) => {
     event.preventDefault()
     const selectedDate = new Date(event.target.value).getTime();
-    setResponse(selectedDate )
+    setResponse(event.target.value)
   }
 
   const handleClick = (e) => {
@@ -74,7 +92,7 @@ export default function CreateTrip() {
       name: name,
       location: location,
       length: length,
-      limit: limit,
+      invite: invite,
       startDate: start,
       endDate: end,
       responseDate: response,
@@ -82,11 +100,13 @@ export default function CreateTrip() {
     }
 
     dispatch(createTrip(newTrip))
+    history.push('/list');
     setName("")
     setLength("")
     setDates("")
-    setResponse("")
-    setLimit("")
+    setResponse(currentDate)
+    setEnd(currentDate)
+    setStart(currentDate)
   }
 
   const handleToggleDateSelection = () => {
@@ -112,10 +132,19 @@ export default function CreateTrip() {
         </div>: <div></div>}
         {length?
         <div>
-        <label> <h2 htmlFor="limit" style={{marginRight: "10px"}}>Limit: </h2></label>
-          <input name='limit' onChange={handleChange6}  type="text" placeholder="Limit"/>
-        </div>: <div></div>}
-        {limit?
+          <label> <h2 htmlFor="invite" style={{ marginRight: "10px" }}>Invites: </h2></label>
+          {users.map(user => (
+            <button
+              key={user.id}
+              className={`btn ${isSelected(user.id) ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => toggleInvite(user.id)}
+            >
+              {user.username}
+            </button>
+          ))}
+        </div>
+      : <div></div>}
+        {invite?
               <div>
               <label>
                 <h2 htmlFor="start" style={{marginRight: "10px"}}>Start Date: </h2>
@@ -135,7 +164,7 @@ export default function CreateTrip() {
              </>
            )
             </div>: <div></div>}
-            {limit?
+            {invite?
               <div>
               <label>
                 <h2 htmlFor="end" style={{marginRight: "10px"}}>End Date: </h2>
@@ -155,7 +184,7 @@ export default function CreateTrip() {
              </>
            )
             </div>: <div></div>}
-        {limit?
+        {invite?
         <div>
         <label>
           <h2 htmlFor="response" style={{marginRight: "10px"}}>Respond By: </h2>
