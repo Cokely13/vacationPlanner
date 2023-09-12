@@ -3,7 +3,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
-// import { Link, useParams, } from 'react-router-dom'
 import { useNavigate } from "react-router-dom"
 import {createTrip} from '../store/allTripsStore'
 import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom.min'
@@ -32,13 +31,15 @@ export default function CreateTrip() {
     dispatch(fetchUsers());
   }, []);
 
-  const toggleInvite = (userId) => {
+  const toggleInvite = (event, userId) => {
+    event.preventDefault();  // prevent the default button click behavior
+    console.log("invite", invite)
     if (invite.includes(userId)) {
       setInvite(invite.filter(id => id !== userId));
     } else {
       setInvite([...invite, userId]);
     }
-  }
+}
 
   const isSelected = (userId) => {
     return invite.includes(userId);
@@ -88,6 +89,7 @@ export default function CreateTrip() {
 
   const handleClick = (e) => {
     e.preventDefault()
+    console.log("new trip")
     const newTrip = {
       name: name,
       location: location,
@@ -134,13 +136,13 @@ export default function CreateTrip() {
         <div>
           <label> <h2 htmlFor="invite" style={{ marginRight: "10px" }}>Invites: </h2></label>
           {users.map(user => (
-            <button
-              key={user.id}
-              className={`btn ${isSelected(user.id) ? "btn-primary" : "btn-secondary"}`}
-              onClick={() => toggleInvite(user.id)}
-            >
-              {user.username}
-            </button>
+           <button
+           key={user.id}
+           className={`btn ${isSelected(user.id) ? "btn-primary" : "btn-secondary"}`}
+           onClick={(event) => toggleInvite(event, user.id)}   // pass the event to the function
+       >
+           {user.username}
+           </button>
           ))}
         </div>
       : <div></div>}

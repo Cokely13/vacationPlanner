@@ -79,7 +79,20 @@ function TripList() {
           <div>Start Date: {trip.startDate}</div>
           <div>End Date: {trip.endDate}</div>
           <div>Response Date: {trip.responseDate}</div>
-          <div>Limit: {trip.confirms ?trip.limit == "0" ? "No Limit" : trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit : <div>{trip.limit == "0" ? "No Limit" : <div>{trip.limit}</div> }</div>}</div>
+          <div>
+    Invites: {getNamesFromIds(trip.invite).join(', ')}
+    {/* {trip.invite ?
+        trip.invite.map((invite, index) => (
+            <span key={index}>
+                {invite}
+                {index !== trip.invite.length - 1 ? ', ' : ''}
+            </span>
+        ))
+        :
+        <div></div>
+    } */}
+</div>
+          {/* <div>Invites: {trip.confirms ?trip.limit == "0" ? "No Limit" : trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit : <div>{trip.limit == "0" ? "No Limit" : <div>{trip.limit}</div> }</div>}</div> */}
           <div>Created By: {trip.createdBy}</div>
           {trip.createdBy == id ? (
             <div><Link to={`/edittrip/${trip.id}`}>Edit Trip</Link></div>
