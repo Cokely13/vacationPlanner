@@ -89,7 +89,6 @@ export default function CreateTrip() {
 
   const handleClick = (e) => {
     e.preventDefault()
-    console.log("new trip")
     const newTrip = {
       name: name,
       location: location,

@@ -10,16 +10,17 @@ import { fetchTrip } from '../store/singleTripStore'
 
 export default function TravelInfo() {
   const dispatch = useDispatch()
+  const currentDate = new Date().getTime()
   const users = useSelector((state) => state.allUsers);
-  const [targetDate, setTargetDate] = useState(new Date('June 11, 2023 09:00:00').getTime());
+  const [targetDate, setTargetDate] = useState(currentDate);
   const [city, setCity] = useState();
   const [reload, setReload] = useState(1);
   const [createdBy, setCreatedBy] = useState();
-  const [arrival, setArrival] = useState(new Date('June 11, 2023 09:00:00').getTime());
-  const [departure, setDeparture] = useState(new Date('June 11, 2023 09:00:00').getTime());
   const [addTravel, setAddTravel] = useState()
   const {id} = useSelector((state) => state.auth )
   const trip = useSelector((state) => state.singleTrip);
+  const [arrival, setArrival] = useState(currentDate);
+  const [departure, setDeparture] = useState(currentDate);
   const [showDateSelection, setShowDateSelection] = useState(false);
   const [localTravels, setLocalTravels] = useState([]);
   const { tripId } = useParams();
@@ -44,6 +45,7 @@ export default function TravelInfo() {
         setLocalTravels(trip.travels);
     }
 }, [trip]);
+
 
 
 

@@ -30,6 +30,20 @@ function TripList() {
     setLocalTrips(tripsFromStore); // copy trips from Redux store to local state
   }, [tripsFromStore]);
 
+  const userCanSeeTrip = (trip) => {
+    // Check if the user is the creator of the trip
+    if (trip.createdBy === id) {
+      return true;
+    }
+
+    // Check if the user is invited to the trip
+    if (trip.invite.includes(id)) {
+      return true;
+    }
+
+    return false;
+  }
+
   const handleClick = (tripId, confirms, action) => {
     let updatedConfirms = [];
 
@@ -68,7 +82,7 @@ function TripList() {
   return (
     <div>
       <div>TripList</div>
-      {localTrips ? localTrips.map((trip) => (
+      {localTrips ? localTrips.filter(userCanSeeTrip).map((trip) => (
         <div key={trip.id}>
           <b><u>TRIP</u></b>
           <div>Name: <Link to={`/tripdetails/${trip.id}`}>{trip.name}</Link></div>
@@ -81,18 +95,7 @@ function TripList() {
           <div>Response Date: {trip.responseDate}</div>
           <div>
     Invites: {getNamesFromIds(trip.invite).join(', ')}
-    {/* {trip.invite ?
-        trip.invite.map((invite, index) => (
-            <span key={index}>
-                {invite}
-                {index !== trip.invite.length - 1 ? ', ' : ''}
-            </span>
-        ))
-        :
-        <div></div>
-    } */}
-</div>
-          {/* <div>Invites: {trip.confirms ?trip.limit == "0" ? "No Limit" : trip.limit == trip.confirms.length ? "Limit Reached" : trip.limit : <div>{trip.limit == "0" ? "No Limit" : <div>{trip.limit}</div> }</div>}</div> */}
+    </div>
           <div>Created By: {trip.createdBy}</div>
           {trip.createdBy == id ? (
             <div><Link to={`/edittrip/${trip.id}`}>Edit Trip</Link></div>
