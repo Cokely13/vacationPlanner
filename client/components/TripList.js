@@ -9,11 +9,52 @@ import { Link } from 'react-router-dom';
 function TripList() {
   const dispatch = useDispatch();
   const tripsFromStore = useSelector((state) => state.allTrips);
+  const [timeFilter, setTimeFilter] = useState('all'); // "upcoming", "past", or "all"
+  const [confirmationFilter, setConfirmationFilter] = useState('all'); // "confirmed", "unconfirmed", or "all"
   const users = useSelector((state) => state.allUsers);
   const { id } = useSelector((state) => state.auth);
+  const [countdowns, setCountdowns] = useState({});
 
 
-  console.log("users", tripsFromStore)
+  const getRemainingTime = (endDate) => {
+    const now = new Date();
+    const end = new Date(endDate);
+    const diff = end - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    if (diff <= 0) {
+      return "Expired";
+    }
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
+
+  const timeFilterFunction = (trip) => {
+    if (timeFilter === 'upcoming') {
+      return new Date(trip.endDate) > new Date();
+    }
+    if (timeFilter === 'past') {
+      return new Date(trip.endDate) <= new Date();
+    }
+    return true; // for "all"
+  }
+
+  const confirmationFilterFunction = (trip) => {
+    const confirms = trip.confirms || []; // if trip.confirms is null or undefined, use an empty array
+
+    if (confirmationFilter === 'confirmed') {
+      return confirms.includes(id);
+    }
+    if (confirmationFilter === 'unconfirmed') {
+      return !confirms.includes(id);
+    }
+    return true; // for "all"
+  }
+
 
   // Use local state
   const [localTrips, setLocalTrips] = useState([]);
@@ -21,6 +62,18 @@ function TripList() {
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newCountdowns = {};
+      localTrips.forEach(trip => {
+        newCountdowns[trip.id] = getRemainingTime(trip.responseDate);
+      });
+      setCountdowns(newCountdowns);
+    }, 1000);
+
+    return () => clearInterval(interval);  // cleanup on component unmount
+  }, [localTrips]);
 
   useEffect(() => {
     dispatch(fetchTrips());
@@ -82,7 +135,26 @@ function TripList() {
   return (
     <div>
       <div>TripList</div>
-      {localTrips ? localTrips.filter(userCanSeeTrip).map((trip) => (
+      <div>
+  <label>
+    Time Filter:
+    <select value={timeFilter} onChange={(e) => setTimeFilter(e.target.value)}>
+      <option value="all">All</option>
+      <option value="upcoming">Upcoming</option>
+      <option value="past">Past</option>
+    </select>
+  </label>
+
+  <label>
+    Confirmation Filter:
+    <select value={confirmationFilter} onChange={(e) => setConfirmationFilter(e.target.value)}>
+      <option value="all">All</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="unconfirmed">Unconfirmed</option>
+    </select>
+  </label>
+</div>
+      {localTrips ? localTrips.filter(userCanSeeTrip).filter(timeFilterFunction).filter(confirmationFilterFunction).map((trip) => (
         <div key={trip.id}>
           <b><u>TRIP</u></b>
           <div>Name: <Link to={`/tripdetails/${trip.id}`}>{trip.name}</Link></div>
@@ -92,10 +164,11 @@ function TripList() {
           <div>Names: {getNamesFromIds(trip.confirms).join(', ')}</div>
           <div>Start Date: {trip.startDate}</div>
           <div>End Date: {trip.endDate}</div>
-          <div>Response Date: {trip.responseDate}</div>
+          <div>Response Date: {trip.responseDate} (Countdown: {countdowns[trip.id] || "Calculating..."})</div>
           <div>
     Invites: {getNamesFromIds(trip.invite).join(', ')}
     </div>
+
           <div>Created By: {trip.createdBy}</div>
           {trip.createdBy == id ? (
             <div><Link to={`/edittrip/${trip.id}`}>Edit Trip</Link></div>

@@ -13,10 +13,16 @@ function NewTrip() {
   const { id } = useSelector((state) => state.auth);
 
 
-  console.log("users", tripsFromStore)
 
   // Use local state
   const [localTrips, setLocalTrips] = useState([]);
+
+  const userCanSeeTrip = (trip) => {
+    if (trip.createdBy === id || (trip.invite && trip.invite.includes(id))) {
+      return true;
+    }
+    return false;
+  }
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -28,7 +34,9 @@ function NewTrip() {
 
   useEffect(() => {
     if(tripsFromStore && tripsFromStore.length > 0) {
-        const sortedTrips = [...tripsFromStore].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedTrips = [...tripsFromStore]
+        .filter(userCanSeeTrip)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setLocalTrips([sortedTrips[0]]);
     }
 }, [tripsFromStore]);
