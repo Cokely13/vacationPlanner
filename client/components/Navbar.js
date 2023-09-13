@@ -5,7 +5,7 @@ import {logout} from '../store'
 
 const Navbar = ({handleClick, isLoggedIn}) => (
   <div>
-    <h1>FS-App-Template</h1>
+    <h1>Vacation Planner</h1>
     <nav>
       {isLoggedIn ? (
         <div>
@@ -14,6 +14,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           <Link to="/create">CreateTrip</Link>
           {/* <Link to="/tripdetails">TripDetails</Link> */}
           <Link to="/list">Trips</Link>
+          <Link to="/calendar">Calendar</Link>
           <Link to="/travel">TravelInfo</Link>
           <a href="#" onClick={handleClick}>
             Logout

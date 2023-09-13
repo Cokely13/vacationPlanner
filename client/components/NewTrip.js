@@ -11,11 +11,43 @@ function NewTrip() {
   const tripsFromStore = useSelector((state) => state.allTrips);
   const users = useSelector((state) => state.allUsers);
   const { id } = useSelector((state) => state.auth);
+  const [countdowns, setCountdowns] = useState({});
+
+
+  const getRemainingTime = (endDate) => {
+    const now = new Date();
+    const end = new Date(endDate);
+    const diff = end - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    if (diff <= 0) {
+      return "Expired";
+    }
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
+
 
 
 
   // Use local state
   const [localTrips, setLocalTrips] = useState([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newCountdowns = {};
+      localTrips.forEach(trip => {
+        newCountdowns[trip.id] = getRemainingTime(trip.responseDate);
+      });
+      setCountdowns(newCountdowns);
+    }, 1000);
+
+    return () => clearInterval(interval);  // cleanup on component unmount
+  }, [localTrips]);
 
   const userCanSeeTrip = (trip) => {
     if (trip.createdBy === id || (trip.invite && trip.invite.includes(id))) {
@@ -90,6 +122,7 @@ function NewTrip() {
           <div>Start Date: {localTrips[0].startDate}</div>
           <div>End Date: {localTrips[0].endDate}</div>
           <div>Response Date: {localTrips[0].responseDate}</div>
+          <div>Response Date: {localTrips[0].responseDate} (Countdown: {countdowns[localTrips[0].id] || "Calculating..."})</div>
           <div>Limit: {localTrips[0].confirms ?localTrips[0].limit == "0" ? "No Limit" : localTrips[0].limit == localTrips[0].confirms.length ? "Limit Reached" : localTrips[0].limit : <div>{localTrips[0].limit == "0" ? "No Limit" : <div>{localTrips[0].limit}</div> }</div>}</div>
           <div>Created By: {localTrips[0].createdBy}</div>
           {localTrips[0].createdBy == id ? (

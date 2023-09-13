@@ -29,7 +29,6 @@ export default function TravelInfo() {
 
   const travels = trip.travels
 
-  console.log("travel", trip)
 
   useEffect(() => {
     dispatch(fetchUsers());

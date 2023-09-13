@@ -31,6 +31,8 @@ export default function CreateTrip() {
     dispatch(fetchUsers());
   }, []);
 
+  console.log("CHECK!!!")
+
   const toggleInvite = (event, userId) => {
     event.preventDefault();  // prevent the default button click behavior
     console.log("invite", invite)
